@@ -1,25 +1,37 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
+import UserAuthenticationLogin from './UserAuthenticationLogin';
+import TaskEditingUpdating from './TaskEditingUpdating';
+import TaskListDisplayFilter from './TaskListDisplayFilter';
+import TaskCreationDeletion from './TaskCreationDeletion';
 import './App.css';
-
-function App() {
+const App = () => {
+  const [loggedInUser, setLoggedInUser] = useState(null);
+  const [tasks, setTasks] = useState([]);
+  const [backgroundImage, setBackgroundImage] = useState(
+    'https://www.techchink.com/wp-content/uploads/2021/02/Task-Management-Software.jpg'
+  );
+  const updateTask = (index, updatedTask) => {
+    const updatedTasks = [...tasks];
+    updatedTasks[index] = updatedTask;
+    setTasks(updatedTasks);
+  };
+  const handleLogin = (username) => {
+    setLoggedInUser(username);
+    setBackgroundImage('url("new-background-image-url.jpg")');
+  };
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div style={{ backgroundImage: backgroundImage }}>
+      {loggedInUser ? (
+        <div>
+          <h1>Welcome, {loggedInUser}!</h1>
+          <TaskCreationDeletion tasks={tasks} setTasks={setTasks} />
+          <TaskListDisplayFilter tasks={tasks} />
+          <TaskEditingUpdating tasks={tasks} updateTask={updateTask} />
+        </div>
+      ) : (
+        <UserAuthenticationLogin onLogin={handleLogin} />
+      )}
     </div>
   );
-}
-
+};
 export default App;
